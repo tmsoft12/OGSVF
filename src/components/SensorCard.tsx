@@ -23,7 +23,6 @@ const SensorCard: React.FC<SensorCardProps> = ({
   progressColor,
   timestamp
 }) => {
-  // Determine status text color
   const getStatusTextColor = () => {
     switch (progressColor) {
       case 'bg-green-500':

@@ -6,6 +6,7 @@ import { Thermometer, Droplets, Flame, DoorOpen, Eye } from 'lucide-react';
 const SensorGrid: React.FC = () => {
   const { sensorData } = useWebSocket();
 
+  // Sensör görnüşine görä degişli ikonany yzyna gaýtaryp berer
   const getSensorIcon = (type: string) => {
     switch (type) {
       case 'temperature':
@@ -23,6 +24,7 @@ const SensorGrid: React.FC = () => {
     }
   };
 
+  // Statusa görä reňkleri yzyna gaýtaryp berer
   const getProgressColor = (status: string) => {
     switch (status) {
       case 'normal':
@@ -36,43 +38,53 @@ const SensorGrid: React.FC = () => {
     }
   };
 
+  // Sensör görnüşine görä has jikme-jik ilerleme bahasy hasaplanar
   const getProgressValue = (sensor: any) => {
-    // Calculate appropriate progress values for different sensor types
     switch (sensor.type) {
       case 'temperature':
-        // Normalize temperature between 18-30°C
+        // Selsiýde 18-30°C aralygynda normalizasiýa
         return Math.min(100, Math.max(0, ((sensor.value - 18) / (30 - 18)) * 100));
       case 'humidity': 
-        // Humidity is already 0-100%
+        // Nem: 0-100%
         return sensor.value;
       case 'fire':
-        // Binary: 0 or 100%
+        // Oka garşy: 0 ýa-da 100%
         return sensor.value * 100;
       case 'door':
-        // Binary: 0 or 100%
+        // Gapynyň ýagdaýy: 0 ýa-da 100%
         return sensor.value * 100;
       case 'motion':
-        // Binary: 0 or 100%
+        // Hereket: 0 ýa-da 100%
         return sensor.value * 100;
       default:
         return 0;
     }
   };
 
+  // Sensör görnüşine görä has jikme-jik ýagdaý etiketleri
   const getStatusLabel = (sensor: any) => {
-    if (sensor.type === 'door') {
-      return sensor.value === 0 ? 'Closed' : 'Open';
-    } else if (sensor.type === 'fire') {
-      return sensor.value === 0 ? 'No Fire Detected' : 'FIRE ALERT!';
-    } else if (sensor.type === 'motion') {
-      return sensor.value === 0 ? 'No Motion' : 'Motion Detected';
-    } else {
-      return sensor.status.charAt(0).toUpperCase() + sensor.status.slice(1);
+    switch (sensor.type) {
+      case 'door':
+        return sensor.value === 0 ? 'Ýapyk' : 'Açyk';
+      case 'fire':
+        return sensor.value === 0 ? 'Yangyn ýok' : 'Yangyn ALARM!';
+      case 'motion':
+        return sensor.value === 0 ? 'Hereket ýok' : 'Hereket bar';
+        case 'temperature':
+          if (sensor.value < 18) return 'Sowuk';  
+          if (sensor.value > 30) return 'Gyzgyn';  
+          return 'Adaty'; 
+        case 'humidity':
+          if (sensor.value < 30) return 'Pes çyglylyk';
+          if (sensor.value > 70) return 'Beýik çyglylyk';
+          return 'Adaty çyglylyk'; 
+      default:
+        return sensor.status.charAt(0).toUpperCase() + sensor.status.slice(1);
     }
   };
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
       {sensorData.map(sensor => (
         <SensorCard
           key={sensor.id}

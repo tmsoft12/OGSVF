@@ -37,13 +37,8 @@ const Header: React.FC = () => {
       <div className="flex items-center mb-4 md:mb-0">
         <ServerStack size={36} className="text-blue-400 mr-3" />
         <div>
-          <h1 className="text-2xl font-bold text-white">Monitoring of Server Room</h1>
-          {/* <p className="text-gray-400 text-sm mt-1">
-            Status: 
-            <span className={`ml-2 ${connected ? 'text-green-400' : 'text-red-400'}`}>
-              {connected ? 'Connected' : 'Disconnected'}
-            </span>
-          </p> */}
+          <h1 className="text-2xl font-bold text-white">Server Otagynyň Gözegçiligi</h1>
+   
         </div>
       </div>
       
