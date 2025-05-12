@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/logger"
 )
 
 var phoneNumber = "123-456-7890" // Statik olarak bellekte saklanır
@@ -21,6 +22,9 @@ func main() {
 		}
 		return c.Next()
 	})
+
+	// Fiber'ın yerleşik logger middleware'ini ekledik
+	app.Use(logger.New())
 
 	// GET /phone → Şu anki telefon numarasını döner
 	app.Get("/phone", func(c *fiber.Ctx) error {
@@ -47,6 +51,32 @@ func main() {
 		fmt.Println("Yeni numara:", phoneNumber)
 		return c.JSON(fiber.Map{
 			"message": "Numara başarıyla güncellendi",
+		})
+	})
+
+	// POST /api/login → Giriş kontrolü
+	app.Post("/api/login", func(c *fiber.Ctx) error {
+		type LoginRequest struct {
+			Username string `json:"username"`
+			Password string `json:"password"`
+		}
+
+		var body LoginRequest
+		if err := c.BodyParser(&body); err != nil {
+			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+				"message": "Geçersiz veri",
+			})
+		}
+
+		if body.Username == "admin" && body.Password == "1234" {
+			return c.JSON(fiber.Map{
+				"token":   "fake-jwt-token",
+				"message": "Giriş başarılı",
+			})
+		}
+
+		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"message": "Kullanıcı adı veya şifre hatalı",
 		})
 	})
 

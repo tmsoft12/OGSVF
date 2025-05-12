@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
-import { Phone } from 'lucide-react';
-import { getPhoneNumber, updatePhoneNumber } from './api/phone';
+import React, { useState, useEffect } from "react";
+import { Phone } from "lucide-react";
+import { getPhoneNumber, updatePhoneNumber } from "./api/phone";
 
 const PhoneNumberChange: React.FC = () => {
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
-  const [error, setError] = useState<string>('');
-  const [successMessage, setSuccessMessage] = useState<string>('');
+  const [error, setError] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
 
   useEffect(() => {
     const fetchPhoneNumber = async () => {
@@ -15,7 +15,7 @@ const PhoneNumberChange: React.FC = () => {
         const number = await getPhoneNumber();
         setPhoneNumber(number);
       } catch (error) {
-        setError('Telefon belgisi alnyp bilinmedi.');
+        setError("Telefon belgisi alnyp bilinmedi.");
       }
     };
 
@@ -34,9 +34,9 @@ const PhoneNumberChange: React.FC = () => {
     try {
       await updatePhoneNumber(phoneNumber);
       setProgress(100);
-      setSuccessMessage('Telefon belgiňiz üstünlikli täzelendi!');
+      setSuccessMessage("Telefon belgiňiz üstünlikli täzelendi!");
     } catch (error) {
-      setError('Telefon belgini täzeläp bolmady.');
+      setError("Telefon belgini täzeläp bolmady.");
     } finally {
       setIsSubmitting(false);
     }
@@ -51,7 +51,9 @@ const PhoneNumberChange: React.FC = () => {
         </div>
         <div>
           <h3 className="text-lg font-semibold text-white">Telefon Belgisi</h3>
-          <p className="text-sm text-gray-400">Täze telefon belgiňizi giriziň</p>
+          <p className="text-sm text-gray-400">
+            Täze telefon belgiňizi giriziň
+          </p>
         </div>
       </div>
 
@@ -72,14 +74,33 @@ const PhoneNumberChange: React.FC = () => {
             disabled={isSubmitting}
           />
         </div>
-
+        <div className="mt-2 bg-gray-700/50 rounded-md flex  items-center">
+          <svg
+            className="w-5 h-5 text-yellow-400 mr-2"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"
+            />
+          </svg>
+          <p className="mt-2 text-sm text-white-900">
+            Üns beriň! Bu ýere girizen telefon belgiňiz, serwer otagynda howp ýüze çykanda SMS habarnama ibermek üçin ulanylýar.
+          </p>
+        </div>
+        <br />
         <button
           type="submit"
           className="w-full py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           disabled={isSubmitting}
-          aria-label={isSubmitting ? 'Täzelenýär...' : 'Täzele'}
+          aria-label={isSubmitting ? "Täzelenýär..." : "Täzele"}
         >
-          {isSubmitting ? 'Täzelenýär...' : 'Täzele'}
+          {isSubmitting ? "Täzelenýär..." : "Täzele"}
         </button>
       </form>
 

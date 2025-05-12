@@ -2,7 +2,10 @@ module t
 
 go 1.23.3
 
-require github.com/gofiber/fiber/v2 v2.52.6
+require (
+	github.com/gofiber/fiber/v2 v2.52.6
+	github.com/golang-jwt/jwt v3.2.2+incompatible
+)
 
 require (
 	github.com/andybalholm/brotli v1.1.0 // indirect
