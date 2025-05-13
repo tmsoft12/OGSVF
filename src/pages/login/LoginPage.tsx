@@ -1,16 +1,18 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Ýol görkezmek üçin
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState(false);
 
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
@@ -19,22 +21,19 @@ const LoginPage: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ username, password }),
+        credentials: "include", // Cookie gözlemegi üçin zerur
       });
 
-      const result = await response.json();
-
       if (response.ok) {
-        setSuccess(true);
-        setError(null);
-        console.log("Token:", result.token); // JWT token
-        // localStorage.setItem("token", result.token); // isleseň saklap bilersiň
-        navigate("/admin"); // Admin sahypasyna geç
+        navigate("/admin"); // Admin sahypasyna gec
       } else {
-        setSuccess(false);
-        setError(result.message || "Giriş başartmady");
+        const data = await response.json();
+        setError(data.message || "Giriş başartmady");
       }
     } catch (err) {
-      setError("Serwere birikip bolmady.");
+      setError("Serwere birikip bolmady");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -44,13 +43,17 @@ const LoginPage: React.FC = () => {
         onSubmit={handleLogin}
         className="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-sm"
       >
-        <h2 className="text-2xl font-bold mb-6 text-white text-center">Ulgama gir</h2>
+        <h2 className="text-2xl font-bold mb-6 text-white text-center">
+          Ulgama gir
+        </h2>
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        {success && <p className="text-green-500 text-sm mb-4">Giriş üstünlikli!</p>}
 
         <div className="mb-4">
-          <label className="block text-gray-300 text-sm mb-2" htmlFor="username">
+          <label
+            className="block text-gray-300 text-sm mb-2"
+            htmlFor="username"
+          >
             Ulanyjy ady
           </label>
           <input
@@ -65,7 +68,10 @@ const LoginPage: React.FC = () => {
         </div>
 
         <div className="mb-6">
-          <label className="block text-gray-300 text-sm mb-2" htmlFor="password">
+          <label
+            className="block text-gray-300 text-sm mb-2"
+            htmlFor="password"
+          >
             Açar söz
           </label>
           <input
@@ -81,9 +87,12 @@ const LoginPage: React.FC = () => {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
+          disabled={loading}
+          className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded ${
+            loading ? "opacity-50 cursor-not-allowed" : ""
+          }`}
         >
-          Içeri gir
+          {loading ? "Giriş..." : "Içeri gir"}
         </button>
       </form>
     </div>

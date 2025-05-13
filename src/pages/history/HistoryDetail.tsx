@@ -1,20 +1,20 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Header from "../../components/Header";
 import { Info } from "lucide-react";
 
 const HistoryDetail: React.FC = () => {
   const { category } = useParams();
+  const navigate = useNavigate();
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [hasPrev, setHasPrev] = useState<boolean>(false);
   const [hasNext, setHasNext] = useState<boolean>(false);
   const [totalCount, setTotalCount] = useState<number>(0);
-  const limit = 10; // Sayfa başına 10 veri
+  const limit = 10;
   const baseUrl = import.meta.env.VITE_API_URL || "http://localhost:3000";
 
-  // category → topic eşleme
   const mapCategoryToTopic = (category: string): string | null => {
     switch (category.toLowerCase()) {
       case "door":
@@ -32,23 +32,12 @@ const HistoryDetail: React.FC = () => {
     }
   };
 
-  // Değerlerin dönüşüm fonksiyonu
   const formatValue = (category: string, value: string): string => {
-    if (category === "door") {
-      return value === "1" ? "Açyk" : "Yapyk";
-    }
-    if (category === "fire") {
-      return value === "1" ? "Yangyn Bar" : "Yangyn Yok";
-    }
-    if (category === "motion") {
-      return value === "1" ? "Hereket Bar" : "Hereket Yok";
-    }
-    if (category === "temperature") {
-      return `${value} °C`;
-    }
-    if (category === "humidity") {
-      return `${value} %`;
-    }
+    if (category === "door") return value === "1" ? "Açyk" : "Yapyk";
+    if (category === "fire") return value === "1" ? "Yangyn Bar" : "Yangyn Yok";
+    if (category === "motion") return value === "1" ? "Hereket Bar" : "Hereket Yok";
+    if (category === "temperature") return `${value} °C`;
+    if (category === "humidity") return `${value} %`;
     return value;
   };
 
@@ -75,8 +64,16 @@ const HistoryDetail: React.FC = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `${baseUrl}/events/topic?topic=${encodeURIComponent(topic)}&page=${page}&limit=${limit}`
-        );
+        `${baseUrl}/events/topic?topic=${encodeURIComponent(topic)}&page=${page}&limit=${limit}`,
+        {
+          credentials: "include", // Cookie gönderimi için
+        }
+      );
+
+      if (response.status === 401) {
+        navigate("/login");
+        return;
+      }
 
       if (!response.ok) {
         throw new Error(`API isteği başarısız oldu: ${response.statusText}`);
