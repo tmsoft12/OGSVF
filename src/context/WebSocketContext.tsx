@@ -130,8 +130,7 @@ export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({ children }
 
   useEffect(() => {
     const wsService = new WebSocketService(
-      // 'ws://192.168.100.220:3000/ws',
-      'ws://127.0.0.1 :3000/ws',
+      import.meta.env.VITE_WS_URL,
       (data: RawSensorData) => {
         const processedData = processIncomingData(data);
         if (processedData) {

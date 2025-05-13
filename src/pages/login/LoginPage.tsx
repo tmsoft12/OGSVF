@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";  // Yönlendirme için ekleme
+import { useNavigate } from "react-router-dom";  // Ýol görkezmek üçin
 
 const LoginPage: React.FC = () => {
   const [username, setUsername] = useState("");
@@ -7,13 +7,13 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<boolean>(false);
 
-  const navigate = useNavigate(); // navigate hook'u
+  const navigate = useNavigate(); 
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
     try {
-      const response = await fetch("http://localhost:3000/api/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -26,16 +26,15 @@ const LoginPage: React.FC = () => {
       if (response.ok) {
         setSuccess(true);
         setError(null);
-        console.log("Token:", result.token); // JWT token geldi diyelim
-        // localStorage.setItem("token", result.token); // istersen burada saklayabilirsin
-        // Giriş başarılı ise admin sayfasına yönlendir
-        navigate("/admin"); // Yönlendirme
+        console.log("Token:", result.token); // JWT token
+        // localStorage.setItem("token", result.token); // isleseň saklap bilersiň
+        navigate("/admin"); // Admin sahypasyna geç
       } else {
         setSuccess(false);
-        setError(result.message || "Giriş başarısız");
+        setError(result.message || "Giriş başartmady");
       }
     } catch (err) {
-      setError("Sunucuya bağlanılamadı.");
+      setError("Serwere birikip bolmady.");
     }
   };
 
@@ -45,14 +44,14 @@ const LoginPage: React.FC = () => {
         onSubmit={handleLogin}
         className="bg-gray-800 p-8 rounded-lg shadow-md w-full max-w-sm"
       >
-        <h2 className="text-2xl font-bold mb-6 text-white text-center">Giriş Yap</h2>
+        <h2 className="text-2xl font-bold mb-6 text-white text-center">Ulgama gir</h2>
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        {success && <p className="text-green-500 text-sm mb-4">Giriş başarılı!</p>}
+        {success && <p className="text-green-500 text-sm mb-4">Giriş üstünlikli!</p>}
 
         <div className="mb-4">
           <label className="block text-gray-300 text-sm mb-2" htmlFor="username">
-            Kullanıcı Adı
+            Ulanyjy ady
           </label>
           <input
             id="username"
@@ -61,13 +60,13 @@ const LoginPage: React.FC = () => {
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             className="w-full px-4 py-2 rounded bg-gray-700 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="kullaniciadi"
+            placeholder="ulanyjyady"
           />
         </div>
 
         <div className="mb-6">
           <label className="block text-gray-300 text-sm mb-2" htmlFor="password">
-            Şifre
+            Açar söz
           </label>
           <input
             id="password"
@@ -84,7 +83,7 @@ const LoginPage: React.FC = () => {
           type="submit"
           className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded"
         >
-          Giriş Yap
+          Içeri gir
         </button>
       </form>
     </div>

@@ -13,7 +13,7 @@ type EventType = 'temperature' | 'humidity' | 'motion' | 'door' | 'fire';
 const categories: { type: EventType; label: string }[] = [
   { type: 'temperature', label: 'Gyzgynlyk' }, // Temperature
   { type: 'humidity', label: 'Çyglylyk' },        // Humidity
-  { type: 'motion', label: 'Hareket' },    // Motion
+  { type: 'motion', label: 'Hereket' },    // Motion
   { type: 'door', label: 'Gapy' },           // Door
   { type: 'fire', label: 'Ýangyn' },           // Fire
 ];
@@ -43,6 +43,8 @@ const Gecmis: React.FC = () => {
   const navigate = useNavigate();
 
   return (
+    <>
+  <h3 className="text-lg font-semibold text-white">Gecmis maglumat</h3>
     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 p-4 bg-gray-900 rounded-lg border border-gray-700/30">
       {categories.map((item) => (
         <div
@@ -52,11 +54,15 @@ const Gecmis: React.FC = () => {
         >
           <div className="flex flex-col items-center">
             {getIcon(item.type)}
-            <div className="text-sm mt-2 capitalize">{item.label}</div>
+            <div className="text-sm mt-2 capitalize">{item.label}
+
+            </div>
           </div>
+
         </div>
+
       ))}
-    </div>
+    </div><br /><br /></>
   );
 };
 

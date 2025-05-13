@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const apiUrl = 'http://localhost:3000'; // API URL
+const apiUrl = import.meta.env.VITE_API_URL; // Artık .env'den alınıyor
 
 export const getPhoneNumber = async (): Promise<string> => {
   try {
